@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 const registerUser = require('./controllers/Registration/registerUser.js');
-
+const loginUser = require('./controllers/Login/loginUser.js');
 
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
@@ -24,5 +24,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.post('/register', registerUser(bcrypt, database));
+
+app.post('/login', loginUser(bcrypt, database));
 
 app.listen( 3000, () => {console.log(`Listening to request on port 3000!`)});
