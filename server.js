@@ -3,10 +3,12 @@ const app = express();
 
 const registerUser = require('./controllers/Registration/registerUser.js');
 const loginUser = require('./controllers/Login/loginUser.js');
+const getIVSAllocation = require('./controllers/Strategies/IVS/getIVSAllocation');
 
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
+const spawn = require("child_process").spawn;
 
 var knex = require('knex')
 
@@ -26,5 +28,13 @@ app.use(bodyParser.json());
 app.post('/register', registerUser(bcrypt, database));
 
 app.post('/login', loginUser(bcrypt, database));
+
+app.post('/IVS', getIVSAllocation(spawn, database));
+
+// const pythonProcess = spawn('python',["./controllers/Strategies/IVS/sample.py", 450]);
+// pythonProcess.stdout.on('data', (data) => {
+//     console.log(data.toString());
+// });
+
 
 app.listen( 3000, () => {console.log(`Listening to request on port 3000!`)});

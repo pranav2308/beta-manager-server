@@ -22,7 +22,7 @@ const registerUser = (bcrypt, database) => (req, res) => {
 	        	}
 	        	else{
 	        		//This case should not happen as transaction was successful and given user should be one and only one. 
-	        		res.status(400).json(`Oops! Something went wrong.`);
+	        		res.status(500).json(`Oops! Something went wrong.`);
 	        	}
 	        })
 	        .catch(error => {
