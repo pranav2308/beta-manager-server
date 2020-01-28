@@ -4,6 +4,7 @@ const app = express();
 const registerUser = require('./controllers/Registration/registerUser.js');
 const loginUser = require('./controllers/Login/loginUser.js');
 const getIVSAllocation = require('./controllers/Strategies/IVS/getIVSAllocation');
+const getMarkowitzAllocation = require('./controllers/Strategies/Markowitz/getMarkowitzAllocation');
 
 const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
@@ -30,6 +31,8 @@ app.post('/register', registerUser(bcrypt, database));
 app.post('/login', loginUser(bcrypt, database));
 
 app.post('/IVS', getIVSAllocation(spawn, database));
+
+app.post('/Markowitz', getMarkowitzAllocation(spawn, database));
 
 // const pythonProcess = spawn('python',["./controllers/Strategies/IVS/sample.py", 450]);
 // pythonProcess.stdout.on('data', (data) => {
