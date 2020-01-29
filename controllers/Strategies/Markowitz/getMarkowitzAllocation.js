@@ -28,25 +28,31 @@ const getMarkowitzAllocation = (spawn, database) => (req, res) => {
 		for(let charToRemove of charsToRemove){
 			resultString = resultString.split(charToRemove).join('');
 		}
+		
+		if(resultString === ''){
+			res.status(406).json('Invalid inputs!');
+		}
+		else{
 
+			const allocationStringArray = resultString.split(',');
 
-		const allocationStringArray = resultString.split(',');
+			const allocationToReturn = allocationStringArray.map(allocationString => {
+				
+				const [ ticker, allocation ] = allocationString.split(':');
+				return { ticker : ticker, allocation : (parseFloat(allocation) * 100) };
+			});
 
-		const allocationToReturn = allocationStringArray.map(allocationString => {
-			
-			const [ ticker, allocation ] = allocationString.split(':');
-			return { ticker : ticker, allocation : (parseFloat(allocation) * 100) };
-		});
-
-		database.transaction(function(trx){
-			return trx('markowitz').insert({ email : email, ticker_list: spaceSepTickerList, window_length: parseInt(windowLength), capital : parseInt(capital), allocation: allocationToReturn, submit_date: new Date()})
-			.then(() => {
-				return trx('users').where('email', '=', email).increment('n_markowitz', 1);
+			database.transaction(function(trx){
+				return trx('markowitz').insert({ email : email, ticker_list: spaceSepTickerList, window_length: parseInt(windowLength), capital : parseInt(capital), allocation: allocationToReturn, submit_date: new Date()})
+				.then(() => {
+					return trx('users').where('email', '=', email).increment('n_markowitz', 1);
+				})
 			})
-		})
-		.then(() => res.status(200).json(allocationToReturn))
-		.catch(error => res.status(500).json(`Oops! Something went wrong. You have been struck with ${error}`))
+			.then(() => res.status(200).json(allocationToReturn))
+			.catch(error => res.status(500).json(`Oops! Something went wrong. You have been struck with ${error}`))
 
+		}
+		
 	})
 	.catch(error => res.status(500).json(`Oops! Something went wrong. You have been struck with ${error}`));
 }
