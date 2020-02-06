@@ -1,4 +1,4 @@
-const validateRegistrationCredentials = require('../Utils/CredentialValidator.js');
+const {validateRegistrationCredentials} = require('../Utils/CredentialValidator.js');
 
 
 const registerUser = (bcrypt, database) => (req, res) => {

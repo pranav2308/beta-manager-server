@@ -20,4 +20,13 @@ function validateRegistrationCredentials(name, email, password){
 	return false;
 }
 
-module.exports = validateRegistrationCredentials;
+function validateLoginCredentials(email, password){
+	if(isEmailValid(email) && isPasswordValid(password)){
+		return true;
+	}
+	return false;
+}
+
+module.exports = {
+	validateRegistrationCredentials,
+	validateLoginCredentials };
