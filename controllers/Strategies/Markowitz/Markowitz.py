@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import pandas_datareader as pdr
 from scipy.optimize import minimize
 import sys
-import json
 
 '''
 Based on : https://stackoverflow.com/questions/23450534/how-to-call-a-python-function-from-node-js

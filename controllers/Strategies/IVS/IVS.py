@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pandas_datareader as pdr
 from scipy.optimize import minimize
 
-import json
+
 
 '''
 argv[1] : String of space-separated valid stock tickers in the portfolio
