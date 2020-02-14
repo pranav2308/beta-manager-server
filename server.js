@@ -39,5 +39,5 @@ app.post('/Markowitz', getMarkowitzAllocation(spawn, database));
 //     console.log(data.toString());
 // });
 
-
-app.listen( 3000, () => {console.log(`Listening to request on port 3000!`)});
+const port  = process.env.PORT || 3000;
+app.listen( port, () => {console.log(`Listening to request on port ${port}!`)});
