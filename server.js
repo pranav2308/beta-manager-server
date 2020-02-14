@@ -24,9 +24,9 @@ const database = knex({
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
-	res.send('Successful Deployment!');
-});
+// app.get('/', (req, res) => {
+// 	res.send('Successful Deployment!');
+// });
 app.post('/register', registerUser(bcrypt, database));
 
 app.post('/login', loginUser(bcrypt, database));
