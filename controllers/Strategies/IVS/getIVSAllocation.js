@@ -18,7 +18,11 @@ const getIVSAllocation = (spawn, database) => (req, res) => {
     	});
 	})
 
-	runIVS.catch(error => res.status(406).json('Invalid inputs!'));
+	let validationError = false;
+	runIVS.catch(error => {
+		res.status(406).json('Invalid inputs!');
+		validationError = true;
+	});
 	
 	runIVS.then(buffer => {
 
@@ -46,7 +50,11 @@ const getIVSAllocation = (spawn, database) => (req, res) => {
 		.then(() => res.status(200).json(allocationToReturn))
 		.catch(error => res.status(500).json(`Oops! Something went wrong. You have been struck with ${error}`));
 	})
-	.catch(error => res.status(500).json(`Oops! Something went wrong. You have been struck with ${error}`));
+	.catch(error => { 
+		if(!validationError){
+			res.status(500).json(`Oops! Something went wrong. You have been struck with ${error}`)	
+		}
+	});
 }
 
 

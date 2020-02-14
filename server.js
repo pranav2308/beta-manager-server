@@ -13,11 +13,21 @@ const spawn = require("child_process").spawn;
 
 var knex = require('knex')
 
+// const database = knex({
+//   client: 'pg',
+//   connection: {
+//     connectionString: process.env.DATABASE_URL,
+//   	ssl: true
+//   }
+// });
+
 const database = knex({
   client: 'pg',
   connection: {
-    connectionString: process.env.DATABASE_URL,
-  	ssl: true
+    host : '127.0.0.1',
+    user : 'postgres',
+    password : 'pranav2308',
+    database : 'beta_manager'
   }
 });
 
@@ -37,5 +47,6 @@ app.post('/Markowitz', getMarkowitzAllocation(spawn, database));
 //     console.log(data.toString());
 // });
 
-const port  = process.env.PORT || 3000;
+// const port  = process.env.PORT || 3000;
+const port  = 3000;
 app.listen( port, () => {console.log(`Listening to request on port ${port}!`)});
