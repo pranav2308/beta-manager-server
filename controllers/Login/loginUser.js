@@ -20,6 +20,7 @@ const loginUser = (bcrypt, database) => (req, res) => {
 				    		}
 				    		else{
 				    			/*
+				    			This case should not arise because ->
 				    			case 1: Either user data with given email does not exists in users table 
 				    					which is not theoritically possible because of transactions.
 				    			case 2: More than 1 users data exists with given email which is again theoritically not possible 

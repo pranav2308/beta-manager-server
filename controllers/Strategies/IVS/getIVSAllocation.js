@@ -4,8 +4,11 @@
 const getIVSAllocation = (spawn, database) => (req, res) => {
 
 	const { tickerList : commaSepTickerList, windowLength, capital, email } = req.body;
+
+	//Replace commas in tickerlist with spaces
 	const spaceSepTickerList = commaSepTickerList.split(',').join(' ');
 	
+	//Call IVS.py with tickerList, windowLength and capital and resolve/reject the promise with result.
 	const runIVS = new Promise(function(resolve, reject){
 		const pyprog = spawn('python', ['./controllers/Strategies/IVS/IVS.py', spaceSepTickerList, windowLength, capital]);
 
@@ -19,13 +22,14 @@ const getIVSAllocation = (spawn, database) => (req, res) => {
 	})
 
 	let validationError = false;
+	//If python function return error then respond with error.
 	runIVS.catch(error => {
 		res.status(406).json('Invalid inputs!');
 		validationError = true;
 	});
 	
 	runIVS.then(buffer => {
-
+		//Parse the python function input.
 		let resultString = buffer.toString(); 
 		const charsToRemove = ['}', '{', '\r', '\n', '\"', "\'", ' ']
 
@@ -35,12 +39,16 @@ const getIVSAllocation = (spawn, database) => (req, res) => {
 		
 		const allocationStringArray = resultString.split(',');
 
+		//Convert the python allocation output to %. 
 		const allocationToReturn = allocationStringArray.map(allocationString => {
 			
 			const [ ticker, allocation ] = allocationString.split(':');
 			return { ticker : ticker, allocation : (parseFloat(allocation) * 100) };
 		});
 
+
+		//Perform the transaction -> 1. to enter the data into ivs table 2. increment n_ivs count by 1.
+		//If successful then resutrn allocation to frontend.
 		database.transaction(function(trx){
 			return trx('ivs').insert({ email : email, ticker_list: spaceSepTickerList, window_length: parseInt(windowLength), capital : parseInt(capital), allocation: allocationToReturn, submit_date: new Date()})
 			.then(() => {
